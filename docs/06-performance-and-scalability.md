@@ -4,13 +4,13 @@
 
 ## 7.1 Performance SLAs
 
-| Metric | Target | Measurement |
-|---|---|---|
-| API response latency | < 1 second | API Gateway to client |
-| DynamoDB write latency | < 5 seconds | Vehicle event to DynamoDB write |
-| Dashboard update latency | < 3 seconds | Vehicle event to browser timeframe |
-| Trip detection latency | < 30 seconds | Drive state change to trip record creation |
-| Vehicle command round-trip | < 10 seconds | User action to OEM API response |
+| Metric | Typical | SLA Ceiling | Measurement |
+|---|---|---|---|
+| API response latency | < 200ms | < 1 second | API Gateway to client |
+| DynamoDB write latency | < 500ms | < 5 seconds | Vehicle event to DynamoDB write |
+| Dashboard update latency | < 1 second | < 3 seconds | Vehicle event to browser |
+| Trip detection latency | < 5 seconds | < 30 seconds | Drive state change to trip record creation |
+| Vehicle command round-trip | < 3 seconds | < 10 seconds | User action to OEM API response |
 
 ---
 
