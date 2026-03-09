@@ -34,26 +34,26 @@
 ### 2.2.3 API and Integration
 | ID | Requirements |
 |----|--------------|
-| TR-6 | No API request is trusted by default and must authenticate JWT before execution |
-| TR-7 | Vehicle commands are internet-egressing and must have steps taken to prevent interception and manipulation. Payloads are cryptographically signed with OEM trusted private keys that are stored and managed in Secrets Manager |
-| TR-8 | Internal (ECS) services must be able to communicate with eachother without manually providing each with IP address information. Cloud Map provides services with persistent private DNS.
+| TR-7 | No API request is trusted by default and must authenticate JWT before execution |
+| TR-8 | Vehicle commands are internet-egressing and must have steps taken to prevent interception and manipulation. Payloads are cryptographically signed with OEM trusted private keys that are stored and managed in Secrets Manager |
+| TR-9 | Internal (ECS) services must be able to communicate with eachother without manually providing each with IP address information. Cloud Map provides services with persistent private DNS.
 
 ### Multi-tenancy
 | ID | Requirements |
 |----|--------------|
-| TR-9 | DynamoDB PK design prevents cross-user and organization data leakage. API requests are not trusted by default and validated via JWT authentication. |
+| TR-10 | DynamoDB PK design prevents cross-user and organization data leakage. API requests are not trusted by default and validated via JWT authentication. |
 
 ### Processing Resilience
 | ID | Requirements |
 |----|--------------|
-| TR-10 | Trip analytics workflows have multi layer safety nets including orphaned job detection and DLQs to clear primary processing path |
-| TR-11 | Consumer supports re-delivery after failure |
+| TR-11 | Trip analytics workflows have multi layer safety nets including orphaned job detection and DLQs to clear primary processing path |
+| TR-12 | Consumer supports re-delivery after failure |
 
 ### Data Storage and Management
 | ID | Requirements |
 |----|--------------|
-| TR-12 | Data solution must be managed and provide minimal processing overhead. DynamoDB is serverless and provides millisecond operations |
-| TR-13 | S3 lifecycle policies is utilized to transition data progressively into cheaper storage classes |
-| TR-14 | TTL utilized to auto-expire ephermeral data from DynamoDB without manual intervention |
-| TR-15 | Data must remain secure and protected. All primary tables have point-in-time recovery and deletion protection enabled |
+| TR-13 | Data solution must be managed and provide minimal processing overhead. DynamoDB is serverless and provides millisecond operations |
+| TR-14 | S3 lifecycle policies is utilized to transition data progressively into cheaper storage classes |
+| TR-15 | TTL utilized to auto-expire ephermeral data from DynamoDB without manual intervention |
+| TR-16 | Data must remain secure and protected. All primary tables have point-in-time recovery and deletion protection enabled |
 
