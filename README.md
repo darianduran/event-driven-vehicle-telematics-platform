@@ -15,19 +15,18 @@ This reference architecture demonstrates the design and deployment of a near rea
     - [C4 Level 1 — System Context](#c4-level-1--system-context)
     - [High-Level AWS Architecture](#high-level-aws-architecture)
   - [3. Key Design Highlights](#3-key-design-highlights)
-  - [4. Cost at Scale](#4-cost-at-scale)
-  - [5. Installation Prerequisites](#5-installation-prerequisites)
+  - [4. Installation Prerequisites](#4-installation-prerequisites)
     - [AWS Account Setup](#aws-account-setup)
-  - [6. Installation](#6-installation)
+  - [5. Installation](#5-installation)
     - [Bootstrap Remote State](#bootstrap-remote-state)
     - [Deploy Environment](#deploy-environment)
     - [Build and Push Container Images](#build-and-push-container-images)
     - [Update ECS Services](#update-ecs-services)
-  - [7. Deployment Validation](#7-deployment-validation)
-  - [8. Repository Structure](#8-repository-structure)
-  - [9. Documentation Index](#9-documentation-index)
-  - [10. Architecture Decision Records](#10-architecture-decision-records)
-  - [11. Cleanup](#11-cleanup)
+  - [6. Deployment Validation](#6-deployment-validation)
+  - [7. Repository Structure](#7-repository-structure)
+  - [8. Documentation Index](#8-documentation-index)
+  - [9. Architecture Decision Records](#9-architecture-decision-records)
+  - [10. Cleanup](#10-cleanup)
  
 ---
 
@@ -67,18 +66,7 @@ This reference architecture demonstrates the design and deployment of a near rea
 
 ---
 
-## 4. Cost at Scale
-
-| Fleet Size | Monthly Cost | Cost Per Vehicle |
-|---|---|---|
-| 100 vehicles | ~$150 | $1.50 |
-| 1,000 vehicles | ~$220 | $0.22 |
-| 10,000 vehicles | ~$620 | $0.062 |
-| 50,000 vehicles | ~$1,730 | $0.035 |
-
----
-
-## 5. Installation Prerequisites
+## 4. Installation Prerequisites
 
 ### AWS Account Setup
 - Create an AWS account and setup AWS Organizations (optional)
@@ -89,7 +77,7 @@ This reference architecture demonstrates the design and deployment of a near rea
 
 ---
 
-## 6. Installation
+## 5. Installation
 
 ### Bootstrap Remote State
 ```bash
@@ -132,7 +120,7 @@ done
 
 ---
 
-## 7. Deployment Validation
+## 6. Deployment Validation
 ```bash
 aws ecs describe-services \
   --cluster fleet-dev-cluster \
@@ -142,11 +130,11 @@ aws ecs describe-services \
 
 ---
 
-## 8. Repository Structure
+## 7. Repository Structure
 
 ---
 
-## 9. Documentation Index
+## 8. Documentation Index
 
 | Document | What It Covers |
 |---|---|
@@ -164,7 +152,7 @@ aws ecs describe-services \
 
 ---
 
-## 10. Architecture Decision Records
+## 9. Architecture Decision Records
 
 | ADR | Decision | Status |
 |---|---|---|
@@ -174,7 +162,7 @@ aws ecs describe-services \
 
 ---
 
-## 11. Cleanup
+## 10. Cleanup
 ```bash
 cd iac/envs/prod && terraform destroy
 cd iac/envs/dev && terraform destroy
