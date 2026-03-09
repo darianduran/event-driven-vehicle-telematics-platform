@@ -131,6 +131,34 @@ aws ecs describe-services \
 ---
 
 ## 7. Repository Structure
+.
+├── adrs
+│   ├── 001-vin-pseudonymization.md
+│   ├── 002-fargate-spot-for-sse.md
+│   ├── 003-fargate-over-eks.md
+│   └── 004-kinesis-over-msk.md
+├── diagrams
+│   ├── alert-dashcam-flow.png
+│   ├── c4-level1-context.png
+│   ├── dashboard-update-flow.png
+│   ├── data-store-diagram.png
+│   ├── defense-in-depth.png
+│   ├── high-level-diagram.png
+│   ├── telemetry-ingest-flow.png
+│   └── trip-lifecycle-flow.png
+├── docs
+│   ├── 01-executive-summary.md
+│   ├── 02-requirements.md
+│   ├── 03-solutions-architecture.md
+│   ├── 04-technical-design.md
+│   ├── 05-security-design.md
+│   ├── 06-performance-and-scalability.md
+│   ├── 07-business-continuity-and-dr.md
+│   ├── 08-implementation-plan.md
+│   ├── 09-operations-and-support.md
+│   └── 10-cost-analysis.md
+├── LICENSE
+└── README.md
 
 ---
 
