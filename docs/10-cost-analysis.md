@@ -57,14 +57,14 @@ Kinesis on-demand standard pricing: $0.080/GB ingested, $0.040/GB retrieved, $0.
 | 5K | ~$7/mo |
 | 10K | ~$15/mo |
 
-> Kinesis is the single largest fixed-rate cost driver at scale. At 10K vehicles, consider Kinesis on-demand Advantage mode ($0.032/GB ingest, $0.016/GB retrieval) which would reduce this to ~$636/mo — a 60% savings.
+> Kinesis is the single largest fixed-rate cost driver at scale. At 10K vehicles, consider Kinesis on-demand Advantage mode ($0.032/GB ingest, $0.016/GB retrieval) which would reduce this by around 60%.
 
 
 ### 10.2.3 Database — DynamoDB
 
 On-demand pricing: $1.25/million WRUs, $0.25/million RRUs (eventually consistent). Storage: $0.25/GB-month.
 
-The consumer applies selective write logic — only state changes, trip events, alerts, and periodic snapshots trigger DynamoDB writes. A realistic write amplification factor is ~15% of raw telemetry events:
+The consumer writes only state changes, trip events, alerts, and periodic snapshots trigger DynamoDB writes. A realistic write amplification factor is ~15% of raw telemetry events:
 
 | Fleet Size | Realistic Writes/mo | Write Cost | Read Cost | Storage | **Monthly Total** |
 |---|---|---|---|---|---|
@@ -76,7 +76,7 @@ The consumer applies selective write logic — only state changes, trip events, 
 
 DynamoDB on-demand mode is the correct default for this architecture. It requires zero capacity planning, handles unpredictable traffic spikes (vehicle reconnection storms, fleet onboarding bursts), and aligns with the platform's minimal operational overhead requirement (BR-8). Below ~5K vehicles, the operational simplicity of on-demand outweighs the cost premium.
 
-However, fleet telemetry produces highly predictable write patterns — vehicle count × events/sec is near-constant during operating hours. As the fleet grows beyond 5K vehicles and traffic patterns stabilize, provisioned capacity with auto-scaling becomes the recommended path:
+However, telemetry  produces highly predictable write patterns vehicle count × events/sec is near-constant during operating hours. As the fleet grows beyond 5K vehicles and traffic patterns stabilize, provisioned capacity with auto-scaling becomes the recommended path:
 
 | Fleet Size | Recommended Mode | Rationale |
 |---|---|---|
@@ -84,7 +84,7 @@ However, fleet telemetry produces highly predictable write patterns — vehicle 
 | 5K–10K | Evaluate provisioned | Predictable baselines established, 20–30% savings available |
 | > 10K | Provisioned + auto-scaling | Cost savings of $700–$1,050/mo justify the added configuration |
 
-Provisioned mode with auto-scaling at 10K vehicles (targeting 70% utilization with scale-up/down policies) would reduce DynamoDB costs from ~$3,513 to approximately **~$2,460–$2,810/mo** — a 20–30% reduction. The auto-scaling configuration adds minimal operational complexity since target tracking policies handle capacity adjustments automatically.
+Provisioned mode with auto-scaling at 10K vehicles (targeting 70% utilization with scale-up/down policies) would reduce DynamoDB costs from ~$3,513 to approximately **~$2,460–$2,810/mo**, a 20–30% reduction. The auto-scaling configuration adds minimal operational complexity since target tracking policies handle capacity adjustments automatically.
 
 ### 10.2.4 Caching — ElastiCache Redis
 
@@ -334,7 +334,7 @@ No optimization required. On-demand pricing for both DynamoDB and Kinesis provid
 | Compute Savings Plans (1-yr, no upfront) | Fargate + Lambda | ~30% (~$35/mo) | Low |
 | Reserved ElastiCache nodes (1-yr) | ElastiCache | ~30% (~$7/mo) | Low |
 
-At this phase, DynamoDB provisioned mode becomes the highest-impact change. Fleet telemetry produces highly predictable write patterns — vehicle count × events/sec is near-constant during operating hours — making auto-scaling target tracking policies effective with minimal tuning. Configure auto-scaling at 70% target utilization with scale-up at 3 minutes and scale-down at 15 minutes to handle daily traffic curves.
+At this phase, DynamoDB provisioned mode becomes the highest-impact change. Fleet telemetry produces highly predictable write patterns vehicle count × events/sec is near-constant during operating hours making auto-scaling target tracking policies effective with minimal tuning. Configure auto-scaling at 70% target utilization with scale-up at 3 minutes and scale-down at 15 minutes to handle daily traffic curves.
 
 ### Phase 3: Scale (> 10K vehicles)
 
@@ -343,11 +343,11 @@ At this phase, DynamoDB provisioned mode becomes the highest-impact change. Flee
 | DynamoDB provisioned + auto-scaling (if not already) | DynamoDB | 20–30% (~$700–$1,050/mo at 10K) | Medium |
 | Kinesis Advantage mode (if not already) | Kinesis | ~60% (~$950/mo at 10K) | Low |
 | Batch DynamoDB writes (BatchWriteItem) | DynamoDB | 5–10% additional WRU reduction | Medium |
-| Set Bedrock usage quotas and prompt caching | Bedrock | Variable — prevents runaway costs | Low |
+| Set Bedrock usage quotas and prompt caching | Bedrock | Prevents runaway costs | Low |
 | S3 Intelligent-Tiering for archives | S3 | ~40% on aged data (~$5/mo) | Low |
 | Consolidate CloudWatch dashboards | Observability | ~$6/mo | Low |
 
-**Maximum optimized cost at 10K vehicles:** Applying DynamoDB provisioned mode and Kinesis Advantage mode alone reduces the monthly total from ~$5,634 to approximately **~$3,734/mo** (~$0.37/vehicle) — a 34% reduction with minimal added operational complexity.
+**Maximum optimized cost at 10K vehicles:** Applying DynamoDB provisioned mode and Kinesis Advantage mode alone reduces the monthly total from ~$5,634 to approximately **~$3,734/mo** (~$0.37/vehicle) a 34% reduction with minimal added operational complexity.
 
 ---
 
