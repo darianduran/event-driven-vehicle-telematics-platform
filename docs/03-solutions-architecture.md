@@ -40,7 +40,7 @@
 #### Data Stores & Caching
 | Service | Role | Description |
 |---|---|---|
-| DynamoDB | Primary Data Store | Low latency and managed database |
+| DynamoDB | Primary Data Store | Low latency and managed database. 21 tables split by vehicle-scoped and org-scoped partition keys |
 | Redis | Real-time state storage | Low latency vehicle data for SSE workflow |
 | S3 | Stores static assets and archives | Stores logs, media, and archived telemetry data | 
 

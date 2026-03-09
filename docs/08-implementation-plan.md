@@ -28,7 +28,7 @@ Same Terraform modules, different variables:
 
 | Config | Dev | Prod |
 |---|---|---|
-| NAT | Instance (t4g.nano, ~$3/mo) | Gateway (Multi-AZ, ~$45/mo) |
+| NAT | Instance (t4g.nano, ~$3/mo) | Gateway (Multi-AZ, ~$68/mo) |
 | ECS desired count | 1 per service | 2+ (Multi-AZ) |
 | Deletion protection | Disabled | Enabled |
 | GuardDuty | Dashboard only | SNS alerting |

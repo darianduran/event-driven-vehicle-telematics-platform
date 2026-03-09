@@ -25,7 +25,7 @@ This reference architecture demonstrates the design and deployment of a near rea
   - [6. Deployment Validation](#6-deployment-validation)
   - [7. Repository Structure](#7-repository-structure)
   - [8. Documentation Index](#8-documentation-index)
-  - [9. Architecture Decision Records](#9-architecture-decision-records)
+  - [9. Architecture Decision ](#9-architecture-decision-records)
   - [10. Cleanup](#10-cleanup)
  
 ---
@@ -148,7 +148,7 @@ aws ecs describe-services \
 | [Implementation Plan](docs/08-implementation-plan.md) | Deployment strategy |
 | [Operations & Support](docs/09-operations-andsupport.md) | Observability and operational workflows |
 | [Cost Analysis](docs/10-cost-analysis.md) | Service cost breakdown and cost optimization efforts |
-| [Appendix A](docs/appendix-a-well-architected-framework.md) | Self-assessment of adherence to well-architected framework and improvement goals |
+
 
 ---
 
@@ -159,6 +159,7 @@ aws ecs describe-services \
 | [ADR-001](adrs/001-vin-pseudonymization.md) | Implementing pseudonymization to protect PII | Accepted |
 | [ADR-002](adrs/002-fargate-spot-for-sse.md) | Fargate Spot to optimize interruptable workflow | Accepted |
 | [ADR-003](adrs/003-fargate-over-eks.md) | ECS Fargate over EKS for container orchestration | Accepted |
+| [ADR-004](adrs/004-kinesis-over-msk.md) | Kinesis Data Streams over Amazon MSK for telemetry ingestion | Accepted |
 
 ---
 

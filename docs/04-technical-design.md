@@ -131,7 +131,55 @@ Securely signs and forwards vehicle commands to the OEM API endpoint. The functi
 ### 4.1.6 Real-Time Streaming Service
 **SSE Service (ECS Fargate Spot):** Authenticates incoming connections using Cognito tokens and verifies vehicle ownership via the `oem-tokens` DynamoDB table. Subscribes to Redis channel to recieve the vehicle data stream. Runs in Fargate Spot mode for cost optimization due to auto reconnecting capabilities and fallbacks.
 
-## 4.2 API Design
+## 4.2 Data Store Design
+
+![Data Store Diagram](../diagrams/data-store-diagram.png)
+
+The platform uses 21 DynamoDB tables split into two partitioning strategies based on access pattern:
+
+**Vehicle-scoped tables** are keyed on `pseudoVIN` for low-latency telemetry reads and writes. 
+
+| Table | PK | Purpose |
+|---|---|---|
+| `vehicle-state` | `pseudoVIN` | Latest vehicle telemetry snapshot |
+| `live-breadcrumbs` | `pseudoVIN` | Active trip GPS breadcrumbs (TTL: 90d) |
+| `trip-state` | `pseudoVIN` | Active/recent trip session state |
+| `trips-index` | `pseudoVIN` | Completed trip summaries and S3 archive references |
+| `charging-soc` | `pseudoVIN` | Charging session state-of-charge history |
+| `vehicle-telemetry-events` | `pseudoVIN` | Errors, connectivity, and metric events (TTL: 90d) |
+| `alerts` | `pseudoVIN` | Vehicle alerts (TTL: 90d) |
+| `security-events` | `pseudoVIN` | Geofence and security events |
+
+**Organization-scoped tables** are keyed on `organizationId` to enforce tenant isolation at the partition key level.
+
+| Table | PK | Purpose |
+|---|---|---|
+| `organizations` | `organizationId` | Tenant metadata and settings |
+| `organization-members` | `organizationId` | User membership, roles, and permissions |
+| `fleet-drivers` | `organizationId` | Driver profiles and license info |
+| `vehicle-assignments` | `organizationId` | Vehicle-to-driver assignments |
+| `fleet-alerts` | `organizationId` | Org-level fleet alerts |
+| `fleet-reports` | `organizationId` | Scheduled and generated reports |
+| `maintenance-records` | `organizationId` | Vehicle maintenance history |
+| `maintenance-alerts` | `organizationId` | Upcoming maintenance notifications |
+| `security-config` | `organizationId` | Geofence definitions and alert thresholds |
+
+**Utility tables** serve specific cross-cutting functions:
+
+| Table | PK | Purpose |
+|---|---|---|
+| `vin-mapping` | `pseudoVIN` | Bidirectional VIN ↔ pseudoVIN resolution (restricted access) |
+| `command-audit` | `userId` | Vehicle command audit trail (TTL: 90d) |
+| `oem-tokens` | `pk` | OAuth tokens for OEM API access |
+
+### 4.2.1 Tenant Isolation Enforcement for Vehicle-Scoped Tables
+
+Organization
+
+Organization-scoped tables are inherently isolated by their `organizationId` partition key, but vehicle-scoped tables require an additional enforcement layer since they are keyed on `pseudoVIN`. Isolation is enforced through a ownership verification at the API boundary. When a user requests vehicle data, the API Lambda extracts the caller's `organizationId` and `pseudoVINs` claims from the Cognito JWT. 
+Before executing any read or write against a vehicle-scoped table, the function validates that the requested `pseudoVIN` exists in the caller's JWT `pseudoVINs` claim set. Requests for pseudoVINs not present in the token are rejected. This means a valid, authenticated user from Organization A physically cannot query vehicle-scoped tables for a pseudoVIN belonging to Organization B.
+
+## 4.3 API Design
 ### 4.2.1 Access Token Service
 
 Two Lambda functions implement resource-scoped authorization:
@@ -139,23 +187,19 @@ Two Lambda functions implement resource-scoped authorization:
 - **Token Generator:** Verifies vehicle ownership by pseudoVin, issues a temporary token (15 minute expiration), and generates CloudFront signed URLs for direct S3 delivery.
 - **Token Authorizer:** Validates token signature, expiration, and resource scope on protected API routes. Results cached for 5 minutes.
 
-## 4.3 Data Flow Diagrams
+## 4.4 Data Flow Diagrams
 
-### 4.3.1 Telemetry Ingestion Flow
+### 4.4.1 Telemetry Ingestion Flow
 
 ![Telemetry Ingestion Flow](../diagrams/telemetry-ingest-flow.png)
 
 
-### 4.3.2 Trip Lifecycle
+### 4.4.2 Trip Lifecycle
 
 ![Trip Lifecycle](../diagrams/trip-lifecycle-flow.png)
 
-### 4.3.3 Vehicle Command Flow
 
-![Vehicle Command Flow](../diagrams/vehicle-command-flow.png)
-
-
-### 4.3.4 Real-Time SSE Connection Flow
+### 4.4.4 Real-Time SSE Connection Flow
 
 ![SSE Connection Flow](../diagrams/dashboard-update-flow.png)
 
